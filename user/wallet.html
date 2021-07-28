@@ -1,0 +1,41 @@
+<?php include '../include/navbar.html';
+include 'wallet.php'; ?>
+    <div class='container-fluid'>
+        <div class="row p-3">
+            <h1>Mi Billetera</h1>
+        </div>
+        <div class="row p-3">
+            <div class="col">
+                <div class="container shadow-lg rounded m-auto p-5">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Código</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Cantidad</th>
+                                <th scope="col">Valor Actual</th>
+                                <th scope="col">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php 
+                            for ($i = 0; $i < count($coin); $i++){ 
+                                echo "<tr>";
+                                echo "<td>",$coin[$i][0],"</td>";
+                                echo "<td>",$coin[$i][1],"</td>";
+                                echo "<td>",$coin[$i][2],"</td>";
+                                echo "<td>",$coin[$i][3],"</td>";
+                                echo "<td>",$coin[$i][4],"</td>";
+                                echo "</tr>";
+                            }
+                            //Cada item del arreglo contiene toda la información de una moneda (relevante)
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
