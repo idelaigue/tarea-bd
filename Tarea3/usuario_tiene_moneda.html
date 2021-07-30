@@ -1,0 +1,42 @@
+<?php include '../include/navbar.html'; ?>
+<div class='container-fluid'>
+    <div class="row p-3">
+        <h1>Monedas del usuario</h1>
+    </div>
+    <div class="row p-3">
+        <div class="col">
+            <!-- Mostrar aquí los datos de cada usuario -->
+            <div class="container shadow-lg rounded m-auto p-5">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Moneda</th>
+                            <th scope="col">Balance</th>
+                    </thead>
+                    <tbody>
+                        <!-- Debería haber una de estas por cada usuario -->
+                        <!-- Link de las Acciones debe llevar el ID del usuario -->
+                        <tr>
+                            <td> </td>
+                            <td> </td>
+                            <td> </td>
+                            <td> </td>
+                            <td>
+                                <a href="/admin/users/update.html?id=0" class="btn btn-warning">Editar <i
+                                        class="fas fa-edit"></i></a>
+                                <a href="/admin/users/CRUD/delete.php?id=0" class="btn btn-danger">Borrar <i
+                                        class="fas fa-trash-alt"></i></a>
+                            </td>
+                        </tr>
+                    
+                    </tbody>
+                </table>
+                <a href="/admin/users/create.html" class="btn btn-success">Nuevo <i class="fas fa-plus"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

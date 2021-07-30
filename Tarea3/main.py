@@ -8,7 +8,9 @@ from models import Cuenta_bancaria
 from models import Moneda
 from models import Precio_moneda
 from models import Usuario_tiene_moneda
+import datatime
 from flask import request
+
 
 def create_app(enviroment):
 	app = Flask(__name__)
@@ -18,39 +20,41 @@ def create_app(enviroment):
 		db.create_all()
 	return app
 
-# Accedemos a la clase config del archivo config.py
+# Accedemos a la clase Config del archivo config.py entregado
 enviroment = config['development']
 app = create_app(enviroment)
 
 
 
-#### Tabla usuario ####
-@app.route('/api/v1/usuario', methods=['GET'])
+
+#___TABLA___USUARIO___#
+#Metodo para obtener algo de la tabla usuario#
+@app.route('/api/usuario', methods=['GET'])
 def get_usuario():
 	users = [ usuario.json() for usuario in Usuario.query.all() ] 
 	return jsonify({'users': users })
 
-@app.route('/api/v1/usuario/', methods=['POST'])
+#Metodo para almacenar tal cosa en la tabla usuario#
+@app.route('/api/usuario/', methods=['POST'])
 def create_usuario():
 	json = request.get_json(force=True)
-
 	if json.get('nombre') is None:
 		return jsonify({'message': 'El formato está mal'}), 400
-
 	user = Usuario.create(json['nombre'],json['apellido'],json['correo'],json['contraseña'],json['pais'])
 
 	return jsonify({'user': user.json() })
 
-@app.route('/api/v1/usuario/<id>', methods=['PUT'])
+#Metodo para reemplazar o crear un nuevo elemento#
+@app.route('/api/usuario/<id>', methods=['PUT'])
 def update_usuario(id):
-	user = Usuario.query.filter_by(id=id).first()
+	usuario = Usuario.query.filter_by(id=id).first()
 	if user is None:
-		return jsonify({'message': 'User does not exists'}), 404
+		return jsonify({'message': 'Usuario no existe'}), 404
 
 	json = request.get_json(force=True)
 	if json.get('nombre') is None:
 		return jsonify({'message': 'Bad request'}), 400
-
+#Es indispensable pedir en este orden los datos
 	user.nombre = json['nombre']
 	user.apellido = json['apellido']
 	user.correo = json['correo']
@@ -61,7 +65,8 @@ def update_usuario(id):
 
 	return jsonify({'user': user.json() })
 
-@app.route('/api/v1/usuario/<id>', methods=['DELETE'])
+#Metodo para eliminar un usuario de la tabla"
+@app.route('/api/usuario/<id>', methods=['DELETE'])
 def delete_usuario(id):
 	user = Usuario.query.filter_by(id=id).first()
 	if user is None:
@@ -71,13 +76,18 @@ def delete_usuario(id):
 
 	return jsonify({'user': user.json() })
 
-### tabla Pais ###
 
-@app.route('/api/v1/pais', methods=['GET'])
+
+
+
+#___TABLA___PAIS___#
+#Metodo para obtener algo de la tabla pais#
+@app.route('/api/pais', methods=['GET'])
 def get_pais():
 	paises = [ pais.json() for pais in Pais.query.all() ] 
 	return jsonify({'paises': paises })
 
+#Metodo para almacenar tal cosa en la tabla Pais#
 @app.route('/api/v1/pais/', methods=['POST'])
 def create_pais():
 	json = request.get_json(force=True)
@@ -89,7 +99,8 @@ def create_pais():
 
 	return jsonify({'paises': paises.json() })
 
-@app.route('/api/v1/pais/<id>', methods=['PUT'])
+#Metodo para reemplazar o crear un nuevo elemento#
+@app.route('/api/pais/<id>', methods=['PUT'])
 def update_pais(id):
 	paises = Pais.query.get(id)
 	if paises is None:
@@ -104,7 +115,7 @@ def update_pais(id):
 
 	return jsonify({'paises': paises.json() })
 
-@app.route('/api/v1/pais/<id>', methods=['DELETE'])
+@app.route('/api/pais/<id>', methods=['DELETE'])
 def delete_pais(id):
 	paises = Pais.query.get(id)
 	if paises is None:
@@ -114,14 +125,20 @@ def delete_pais(id):
 
 	return jsonify({'paises': paises.json() })
 
-### tabla cuenta bancaria ###
 
-@app.route('/api/v1/cuenta_bancaria', methods=['GET'])
+
+
+
+
+#___TABLA___CUENTA_BANCARIA___#
+#Metodo para obtener algo de la tabla usuario#
+@app.route('/api/cuenta_bancaria', methods=['GET'])
 def get_cuentas():
 	cuentas = [ cuenta_bancaria.json() for cuenta_bancaria in Cuenta_bancaria.query.all() ] 
 	return jsonify({'cuentas': cuentas })
 
-@app.route('/api/v1/cuenta_bancaria/', methods=['POST'])
+#Metodo para almacenar tal cosa en la tabla usuario#
+@app.route('/api/cuenta_bancaria/', methods=['POST'])
 def create_cuentas():
 	json = request.get_json(force=True)
 
@@ -132,23 +149,23 @@ def create_cuentas():
 
 	return jsonify({'cuentas': cuentas.json() })
 
-@app.route('/api/v1/cuenta_bancaria/<id>', methods=['PUT'])
+#Metodo para reemplazar o crear un nuevo elemento#
+@app.route('/api/cuenta_bancaria/<id>', methods=['PUT'])
 def update_cuentas(id):
 	cuentas = Cuenta_bancaria.query.get(id)
 	if cuentas is None:
 		return jsonify({'message': 'User does not exists'}), 404
 
 	json = request.get_json(force=True)
-	if json.get('id_usuario') is None:
+	if json.get('balance') is None:
 		return jsonify({'message': 'Bad request'}), 400
 
-	cuentas.id_usuario = json['id_usuario']
 	cuentas.balance = json['balance']
 	cuentas.update()
 
 	return jsonify({'cuentas': cuentas.json() })
 
-@app.route('/api/v1/cuenta_bancaria/<id>', methods=['DELETE'])
+@app.route('/api/cuenta_bancaria/<id>', methods=['DELETE'])
 def delete_cuentas(id):
 	cuentas = Cuenta_bancaria.query.get(id)
 	if cuentas is None:
@@ -158,13 +175,20 @@ def delete_cuentas(id):
 
 	return jsonify({'cuentas': cuentas.json() })
 
-#### Tabla Moneda ####
-@app.route ('/api/v1/moneda', methods=['GET'])
+
+
+
+
+
+#___TABLA___Moneda___#
+#Metodo para obtener algo de la tabla usuario#
+@app.route ('/api/moneda', methods=['GET'])
 def get_moneda():
     currency = [ moneda.json() for moneda in Moneda.query.all() ] 
     return jsonify({'currency': currency })
 
-@app.route('/api/v1/moneda/', methods=['POST'])
+#Metodo para almacenar tal cosa en la tabla usuario#
+@app.route('/api/moneda/', methods=['POST'])
 def create_moneda():
     json = request.get_json(force=True)
 
@@ -175,7 +199,8 @@ def create_moneda():
 
     return jsonify({'currency': currency.json() })
 
-@app.route('/api/v1/moneda/<id>', methods=['PUT'])
+#Metodo para reemplazar o crear un nuevo elemento#
+@app.route('/api/moneda/<id>', methods=['PUT'])
 def update_moneda(id):
     currency = Moneda.query.get(id)
     if currency is None:
@@ -191,7 +216,7 @@ def update_moneda(id):
     currency.update()
     return jsonify({'currency': currency.json() })
 
-@app.route('/api/v1/moneda/<id>', methods=['DELETE'])
+@app.route('/api/moneda/<id>', methods=['DELETE'])
 def delete_moneda(id):
     currency = Moneda.query.filter_by(id=id).first()
     if currency is None:
@@ -202,14 +227,18 @@ def delete_moneda(id):
     return jsonify({'currency': currency.json() })
 
 
-#### Tabla Precio moneda #####
 
-@app.route ('/api/v1/precio_moneda', methods=['GET'])
+
+
+#___TABLA___PRECIO_MONEDA___#
+#Metodo para obtener algo de la tabla precio_moneda#
+@app.route ('/api/precio_moneda', methods=['GET'])
 def get_precio_moneda():
     precio = [ precio_moneda.json() for precio_moneda in Precio_moneda.query.all() ] 
     return jsonify({'precio': precio })
 
-@app.route ('/api/v1/precio_moneda', methods=['POST'])
+#Metodo para almacenar tal cosa en la tabla usuario#
+@app.route ('/api/precio_moneda', methods=['POST'])
 def create_precio_moneda():
     json = request.get_json(force=True)
     if json.get('id') is None:
@@ -219,21 +248,20 @@ def create_precio_moneda():
 
     return jsonify({'currency': currency.json() })
 
-@app.route('/api/v1/precio_moneda/<id>', methods=['PUT'])
+#Metodo para reemplazar o crear un nuevo elemento#
+@app.route('/api/precio_moneda/<id>', methods=['PUT'])
 def update_precio_monedas(id):
-    precio = Precio_moneda.query.filter_by(id=id).first()
+    json = request.get_json(force=True)
+    precio = Precio_moneda.query.filter_by(fecha=json['fecha'],id=id).first()
     if precio is None:
         return jsonify({'message': 'currency does not exists'}), 404
 
-    json = request.get_json(force=True)
-    
-    precio.id = json['id']
     precio.valor = json['valor']
 
     precio.update()
 
     return jsonify({'precio': precio.json() })
-@app.route('/api/v1/precio_moneda/<id>', methods=['DELETE'])
+@app.route('/api/precio_moneda/<id>', methods=['DELETE'])
 def delete_precio_usuario(id):
     precio = Precio_moneda.query.filter_by(id=id).first()
     if precio is None:
@@ -243,13 +271,20 @@ def delete_precio_usuario(id):
 
     return jsonify({'precio': precio.json() })
 
-###### usuario tiene moneda #####
-@app.route('/api/v1/usuario_tiene_moneda', methods=['GET'])
+
+
+
+
+
+#___TABLA___USUARIO_TIENE_MONEDA___#
+#Metodo para obtener algo de la tabla usuario_tiene_moneda#
+@app.route('/api/usuario_tiene_moneda', methods=['GET'])
 def get_usuario_tiene_moneda():
     tener = [ moneda.json() for moneda in Usuario_tiene_moneda.query.all() ] 
     return jsonify({'tener': tener})
 
-@app.route('/api/v1/usuario_tiene_moneda', methods=['POST'])
+#Metodo para almacenar tal cosa en la tabla usuario_tiene_moneda#
+@app.route('/api/usuario_tiene_moneda', methods=['POST'])
 def create_usuario_tiene_moneda():
     json = request.get_json(force=True)
     if json.get('id_usuario') is None:
@@ -259,27 +294,23 @@ def create_usuario_tiene_moneda():
 
     return jsonify({'currency': currency.json() })
 
-@app.route('/api/v1/usuario_tiene_moneda/<id_usuario>', methods=['PUT'])
-def update_usuario_tiene_moneda(id_usuario):
-	user = Usuario_tiene_moneda.query.filter_by(id_usuario=id_usuario).first()
+#Metodo para reemplazar o crear un nuevo elemento#
+@app.route('/api/usuario_tiene_moneda/<id_usuario>/<id_moneda>', methods=['PUT'])
+def update_usuario_tiene_moneda(id_usuario,id_moneda):
+	user = Usuario_tiene_moneda.query.filter_by(id_usuario=id_usuario,id_moneda=id_moneda).first()
 	if user is None:
 		return jsonify({'message': 'User does not exists'}), 404
-
 	json = request.get_json(force=True)
-	if json.get('id_usuario') is None:
+	if json.get('balance') is None:
 		return jsonify({'message': 'Bad request'}), 400
-
-	user.id_usuario = json['id_usuario']
-	user.id_moneda = json['id_moneda']
 	user.balance = json['balance']
-
 	user.update()
-
 	return jsonify({'user': user.json() })
 
-@app.route('/api/v1/usuario_tiene_moneda/<id_usuario>', methods=['DELETE'])
-def delete_usuario_tiene_moneda(id_usuario):
-    tener= Usuario_tiene_moneda.query.filter_by(id_usuario=id_usuario).first()
+@app.route('/api/usuario_tiene_moneda/<id_usuario>/<id_moneda>', methods=['DELETE'])
+def delete_usuario_tiene_moneda(id_usuario,id_moneda):
+    tener= Usuario_tiene_moneda.query.filter_by(id_usuario=id_usuario,id_moneda=id_moneda).first()
+	
     if tener is None:
         return jsonify({'message': 'No existe'}), 404
 
@@ -288,21 +319,24 @@ def delete_usuario_tiene_moneda(id_usuario):
     return jsonify({'tener': tener.json() })
 
 
-### Consultas ####
-@app.route('/api/v1/cuenta_bancaria/max_id/<max_id>', methods=['GET'])
+
+
+##############################################################################################################################
+#Consultas, solo se me pidieron 3#
+@app.route('/api/consulta/2/<max_id>', methods=['GET'])
 def get_custom(max_id):
 	tasks = [dict(cuenta_bancaria) for cuenta_bancaria in Cuenta_bancaria.custom(max_id=max_id).fetchall()]
 	return jsonify({'tasks': tasks })
 
-@app.route('/api/v1/consulta/1/<id>', methods=['GET'])
-def get_tasks_user(id):
-	tasks_users = [ {**(pais.json()),**(usuario.json())} for pais,usuario in db.session.query(Pais,Usuario).join(Usuario, Pais.cod_pais == Usuario.pais).filter(Pais.nombre == id).all()]
-	return jsonify({'tasks_users': tasks_users })
+@app.route('/api/consulta/4/<monedas>', methods=['GET'])
+def get_precio_monedass(monedas):
+	tasks = [dict(moneda) for moneda in Moneda.maximo_historico(monedas=monedas).fetchall()]
+	return jsonify({'tasks': tasks })
 
-@app.route('/api/v1/consulta/2/<id>', methods=['GET'])
-def get_precio_historico(id):
-	tasks_users = [ {**(moneda.json()),**(precio_moneda.json())} for moneda,precio_moneda in db.session.query(Moneda,Precio_moneda).join(Precio_moneda, Moneda.id == Precio_moneda.id).filter(Moneda.nombre == id).all()]
-	return jsonify({'tasks_users': tasks_users })
+@app.route('/api/consulta/5/<monedas>', methods=['GET'])
+def get_precio_circulacion(monedas):
+	tasks = [dict(moneda) for moneda in Moneda.circulacion(monedas=monedas).fetchall()]
+	return jsonify({'tasks': tasks })
 
 
 if __name__ == '__main__':

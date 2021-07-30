@@ -1,0 +1,45 @@
+<?php include '../include/navbar.html';
+include 'pais.php'; ?>
+<div class='container-fluid'>
+    <div class="row p-3">
+        <h1>Tabla País</h1>
+    </div>
+    <div class="row p-3">
+        <div class="col">
+            <!-- Mostrar aquí los datos de cada usuario -->
+            <div class="container shadow-lg rounded m-auto p-5">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Codigo Pais</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($response as $clave=>$product) {
+                            foreach($product as $matriz){ ?>
+                        <!-- Debería haber una de estas por cada usuario -->
+                        <!-- Link de las Acciones debe llevar el ID del usuario -->
+                        <tr>
+                            <td> <?php print_r($matriz["cod_pais"] ); ?></td>
+                            <td> <?php print_r($matriz["nombre"] ); ?> </td>
+                            <td>
+                                <a href="/admin/users/update.html?id=0" class="btn btn-warning">Editar <i
+                                        class="fas fa-edit"></i></a>
+                                <a href="/admin/users/CRUD/delete.php?id=0" class="btn btn-danger">Borrar <i
+                                        class="fas fa-trash-alt"></i></a>
+                            </td>
+                        </tr>
+                        
+                    <?php }}  ?>
+                    </tbody>
+                </table>
+                <a href="/admin/users/create.html" class="btn btn-success">Nuevo <i class="fas fa-plus"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>
